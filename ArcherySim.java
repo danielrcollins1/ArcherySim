@@ -186,7 +186,7 @@ public class ArcherySim {
 		double range = BASE_RANGE;
 		while (range <= MAX_RANGE) {
 			double hitPercent = fireOneCourse(range, targetRadius) * 100;
-			System.out.format("   %3.0f       %2.0f\n", range, hitPercent);
+			System.out.format("   %4.0f      %3.0f\n", range, hitPercent);
 			if (longFormTable) {
 				range += 10.0;
 			}
