@@ -14,10 +14,10 @@ public class ArcherySim {
 	//  Constants
 	//--------------------------------------------------------------------------
 
-	/** Base range to target (in yards/meters). */
+	/** Base range to target (in yards). */
 	final double BASE_RANGE = 10.0;
 
-	/** Maximum range considered (in yards/meters). */
+	/** Maximum range considered (in yards). */
 	final double MAX_RANGE = 200.0;
 
 	/** Number of shots per course. */
@@ -71,7 +71,7 @@ public class ArcherySim {
 		System.out.println("    2.0 for standard archery target");
 		System.out.println("    12.0 for long-distance clout competition");
 		System.out.println("  Default display is a short table with doubling of ranges;");
-		System.out.println("    -L switch forces long/linear table in 10 foot increments");
+		System.out.println("    -L switch forces long/linear table in 10 yard increments");
 		System.out.println();		
 	}
 
@@ -99,7 +99,11 @@ public class ArcherySim {
 			if (args[i].charAt(0) == '-') {
 				switch (args[i].charAt(1)) {
 					case 'l': case 'L': longFormTable = true; break;
+					default: return;
 				}
+			}
+			else {
+				return;
 			}
 		}
 		
@@ -166,30 +170,6 @@ public class ArcherySim {
 	}
 
 	/**	
-	*  Print short table body.
-	*/
-	public void printShortTableBody () {
-		double range = BASE_RANGE;
-		while (range <= MAX_RANGE) {
-			double hitRatio = fireOneCourse(range, targetRadius);
-			System.out.println(range + "\t" + hitRatio);
-			range *= 2;
-		}
-	}
-
-	/**	
-	*  Print long table body.
-	*/
-	public void printLongTableBody () {
-		double range = BASE_RANGE;
-		while (range <= MAX_RANGE) {
-			double hitRatio = fireOneCourse(range, targetRadius);
-			System.out.println(range + "\t" + hitRatio);
-			range *= 2;
-		}
-	}
-
-	/**	
 	*  Print table of results.
 	*/
 	public void printResults () {
@@ -199,14 +179,14 @@ public class ArcherySim {
 		System.out.println("  Shooter Precision: " + shooterPrecision);
 		System.out.println("  Target Radius (ft): " + targetRadius);
 		System.out.println();
-		System.out.println("Range\t Hit %");
-		System.out.println("-----\t -----");
+		System.out.println("Range (yd) Hit (%)");
+		System.out.println("---------- ------");
 
 		// Body
 		double range = BASE_RANGE;
 		while (range <= MAX_RANGE) {
 			double hitPercent = fireOneCourse(range, targetRadius) * 100;
-			System.out.format("%4.0f%6.0f\n", range, hitPercent);
+			System.out.format("   %3.0f       %2.0f\n", range, hitPercent);
 			if (longFormTable) {
 				range += 10.0;
 			}
