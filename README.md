@@ -3,7 +3,7 @@ A short and simple program for simulating archery error via a bivariate normal d
 That is: Variation/error in both the x- and y-axes are computed by a random Gaussian variable.
 
 Usage: ArcherySim [precision] [radius] [-L]<br>
-- Simulates an archery shooting at target with bivariate normal error model.<br>
+- Simulates an archer shooting at target with bivariate normal error model.<br>
 - precision is a value modeling shooter accuracy, e.g.:<br>
     1.5 for a shooter with basic-level training<br>
     7.5 for a shooter with grand-master skill<br>
