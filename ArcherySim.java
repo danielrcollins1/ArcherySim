@@ -62,7 +62,7 @@ public class ArcherySim {
 	*/
 	public void printUsage () {
 		System.out.println("Usage: ArcherySim [precision] [radius] [-L]");
-		System.out.println("  Simulates an archery shooting at target with bivariate normal error model.");
+		System.out.println("  Simulates an archer shooting at target with bivariate normal error model.");
 		System.out.println("  precision is a value modeling shooter accuracy, e.g.:");
 		System.out.println("    1.5 for a shooter with basic-level training");
 		System.out.println("    7.5 for a shooter with grand-master skill");
