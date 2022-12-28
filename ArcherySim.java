@@ -74,7 +74,7 @@ public class ArcherySim {
 	*  Print usage.
 	*/
 	public void printUsage() {
-		print("Usage: ArcherySim [precision] [radius] [-L]");
+		print("Usage: ArcherySim [precision] [radius] [-L] [-E]");
 		print("  Simulates an archer shooting at a target "
 			+ "with bivariate normal error model.");
 		print("  precision value models shooter accuracy, e.g.:");
