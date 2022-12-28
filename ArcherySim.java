@@ -22,6 +22,9 @@ public class ArcherySim {
 	/** Number of shots per course. */
 	static final int SHOTS_PER_COURSE = 100000;
 
+	/** Number of shots in error table. */
+	static final int SHOTS_ERROR_TABLE = 100;
+
 	//----------------------------------------------------------------------
 	//  Fields
 	//----------------------------------------------------------------------
@@ -37,6 +40,9 @@ public class ArcherySim {
 
 	/** Present long-form table? */
 	private boolean longFormTable = false;
+
+	/** Present arrays of errors? */
+	private boolean errorTable = false;
 	
 	/** Have we successfully initialized? */
 	private boolean initSuccess = false;
@@ -72,14 +78,16 @@ public class ArcherySim {
 		print("  Simulates an archer shooting at a target "
 			+ "with bivariate normal error model.");
 		print("  precision value models shooter accuracy, e.g.:");
-		print("    1.5 for a shooter with basic-level training");
-		print("    7.5 for a shooter with grand-master skill");
+		print("    1.0 for accuracy of magic fireball");
+		print("    1.5 for a archer with basic-level training");
+		print("    7.5 for a archer with grand-master skill");
 		print("  radius is the radius of the target in feet, e.g.:");
 		print("    1.5 for a man-sized figure");
 		print("    2.0 for standard archery target");
 		print("    12.0 for long-distance clout competition");
 		print("  Default display is short table of doubling ranges;");
 		print("    -L uses long/linear table in 10 yard increments");
+		print("    -E prints errors for every shot");
 		print("");
 	}
 
@@ -109,8 +117,11 @@ public class ArcherySim {
 		for (int i = 2; i < args.length; i++) {
 			if (args[i].charAt(0) == '-') {
 				switch (args[i].charAt(1)) {
-					case 'l': case 'L': 
+					case 'l': case 'L':
 						longFormTable = true; 
+						break;
+					case 'e': case 'E':
+						errorTable = true; 
 						break;
 					default: return;
 				}
@@ -163,11 +174,21 @@ public class ArcherySim {
 	*  @return True if shot hit the target.
 	*/
 	boolean fireOneShot(double range, double radius) {
+		double error = oneShotError(range);
+		return error <= radius;
+	}
+
+	/**	
+	*  Get the error from one random shot.
+	*  Models error by separate normal distribution in x and y axes.
+	*  @param range Range to target (in yards/meters).
+	*  @return Distance from target in feet.
+	*/
+	double oneShotError(double range) {
 		double xError = randomShotError();
 		double yError = randomShotError();
-		double apparentRadius = radius * BASE_RANGE / range;
-		return square(xError) + square(yError) 
-			<= square(apparentRadius);
+		return Math.sqrt(square(xError) + square(yError))
+			* range / BASE_RANGE;
 	}
 
 	/**	
@@ -197,7 +218,6 @@ public class ArcherySim {
 		System.out.println("  Target Radius (ft): " + targetRadius);
 		System.out.println();
 		System.out.println("Range (yd) Hit (%)");
-		System.out.println("---------- ------");
 
 		// Body
 		double range = BASE_RANGE;
@@ -215,6 +235,44 @@ public class ArcherySim {
 		}
 		System.out.println();
 	}
+
+	/**
+	*  Print table of error data.
+	*/
+	public void printErrorTable() {
+
+		// Print header
+		for (double range = BASE_RANGE / 2; 
+			range <= MAX_RANGE; range *= 2) 
+		{
+			System.out.print(range + ",");		
+		}
+		System.out.println();		
+
+		// Print body
+		for (int shot = 0; shot < SHOTS_ERROR_TABLE; shot++) {
+			for (double range = BASE_RANGE / 2; 
+				range <= MAX_RANGE; range *= 2) 
+			{
+				double error = oneShotError(range);
+				System.out.print(error + ",");
+			}
+			System.out.println();		
+		}
+		System.out.println();		
+	}
+
+	/**
+	*  Primary run function.
+	*/
+	public void run() {
+		if (errorTable) {
+			printErrorTable();
+		}	
+		else {
+			printResults();		
+		}
+	}
 	
 	/**
 	*  Main application method.
@@ -224,7 +282,7 @@ public class ArcherySim {
 		ArcherySim sim = new ArcherySim();
 		sim.parseArgs(args);
 		if (sim.initSuccess) {
-			sim.printResults();
+			sim.run();
 		}
 		else {
 			sim.printUsage();
